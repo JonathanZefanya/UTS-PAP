@@ -1,0 +1,202 @@
+@startuml
+package "Corporate PMS" {
+
+class Company {
+  +id: String
+  +name: String
+  +address: String
+
+  +addDepartment(dept: Department): void
+  +getDepartments(): List<Department>
+  +updateCompanyInfo(): void
+}
+
+class Department {
+  +id: String
+  +name: String
+
+  +addEmployee(emp: Employee): void
+  +getEmployeeList(): List<Employee>
+}
+
+class Employee {
+  +id: String
+  +firstName: String
+  +lastName: String
+  +email: String
+  +phone: String
+
+  +login(): Boolean
+  +assignTask(task: Task): void
+  +submitTimesheet(hours: Float): void
+  +viewAssignedProjects(): List<Project>
+}
+
+class Role {
+  +id: String
+  +name: String
+  +permissions: String
+
+  +assignPermission(permission: String): void
+  +revokePermission(permission: String): void
+}
+
+class UserAccount {
+  +username: String
+  +passwordHash: String
+  +lastLogin: String
+
+  +authenticate(password: String): Boolean
+  +updatePassword(newPassword: String): void
+  +logout(): void
+}
+
+class Project {
+  +id: String
+  +name: String
+  +startDate: String
+  +endDate: String
+  +status: String
+
+  +createProject(): void
+  +updateProject(): void
+  +deleteProject(): void
+  +assignTask(task: Task): void
+  +generateReport(): Report
+}
+
+class Client {
+  +id: String
+  +name: String
+  +contactInfo: String
+
+  +createContract(contract: Contract): void
+  +getProjectList(): List<Project>
+}
+
+class Contract {
+  +id: String
+  +contractNumber: String
+  +value: String
+  +startDate: String
+  +endDate: String
+
+  +signContract(): void
+  +renewContract(): void
+  +terminateContract(): void
+}
+
+class Task {
+  +id: String
+  +title: String
+  +description: String
+  +status: String
+  +priority: String
+
+  +startTask(): void
+  +completeTask(): void
+  +assignEmployee(emp: Employee): void
+  +updateStatus(status: String): void
+}
+
+class Milestone {
+  +id: String
+  +title: String
+  +dueDate: String
+
+  +markAsCompleted(): void
+  +updateDueDate(newDate: String): void
+}
+
+class Resource {
+  +id: String
+  +type: String
+  +name: String
+  +spec: String
+
+  +allocateToProject(project: Project): void
+  +releaseResource(): void
+}
+
+class Allocation {
+  +id: String
+  +quantity: String
+  +allocatedFrom: String
+  +allocatedTo: String
+
+  +allocate(): void
+  +release(): void
+}
+
+class Timesheet {
+  +id: String
+  +date: String
+  +hours: String
+  +description: String
+
+  +submit(): void
+  +editEntry(): void
+  +approve(): void
+}
+
+class Invoice {
+  +id: String
+  +number: String
+  +amount: String
+  +status: String
+
+  +generateInvoice(): void
+  +markAsPaid(): void
+  +cancelInvoice(): void
+}
+
+class Payment {
+  +id: String
+  +paymentDate: String
+  +amount: String
+  +method: String
+
+  +processPayment(): Boolean
+  +refund(): Boolean
+}
+
+class Notification {
+  +id: String
+  +message: String
+  +sentAt: String
+  +read: String
+
+  +send(): void
+  +markAsRead(): void
+}
+
+class Report {
+  +id: String
+  +type: String
+  +generatedAt: String
+
+  +generate(): void
+  +exportToPDF(): void
+}
+
+}
+
+Company "1" -- "*" Department
+Department "1" -- "*" Employee
+Employee "1" -- "1" UserAccount
+Employee "*" -- "*" Role : assigned
+Project "1" -- "*" Task
+Project "1" -- "*" Milestone
+Project "*" -- "1" Client
+Contract "1" -- "1" Project
+Contract "1" -- "1" Client
+Task "*" -- "*" Employee : assignedTo
+Task "1" -- "*" Timesheet
+Resource "*" -- "*" Allocation
+Allocation "*" -- "1" Project
+Allocation "*" -- "1" Resource
+Invoice "1" -- "1" Contract
+Payment "*" -- "1" Invoice
+Notification "*" -- "1" UserAccount
+Report "*" -- "1" Project
+@enduml
